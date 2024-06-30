@@ -9,12 +9,14 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import User from "../type";
+import { useNavigate } from "react-router-dom";
 type LoginUser = Pick<User, "email" | "password">;
 const Login = () => {
   const [user, setUser] = useState<LoginUser>({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
@@ -29,8 +31,15 @@ const Login = () => {
   const handleLogin = () => {
     axios
       .post("http://localhost:3001/user/login", user)
-      .then((res) => alert(res.data.message))
-      .catch((err) => alert(err.message));
+      .then((res) => {
+        alert(res.data.message);
+        setUser({ email: "", password: "" });
+        localStorage.setItem("accessToken", res.data.accessToken);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err);
+      });
   };
 
   return (
@@ -40,6 +49,7 @@ const Login = () => {
         <Input
           type="email"
           name="email"
+          placeholder="your email here"
           value={user.email}
           onChange={handleUserChange}
         />
@@ -55,28 +65,42 @@ const Login = () => {
           type="text"
           name="password"
           value={user.password}
-          placeholder="your_password"
+          placeholder="your password here"
           onChange={handleUserChange}
           required
         />
         {isErrorPassword ? (
-          <FormHelperText>
-            minimum eight characters is required for your password
-          </FormHelperText>
+          <FormHelperText>your valid password is required</FormHelperText>
         ) : (
           <FormErrorMessage></FormErrorMessage>
         )}
       </FormControl>
-      <Button
-        style={{
-          marginTop: "2%",
-          width: "80%",
-        }}
-        colorScheme="blue"
-        onClick={handleLogin}
-      >
-        Login
-      </Button>
+      <div style={{ display: "flex", gap: "20%", margin: "1% 10% auto 10%" }}>
+        {" "}
+        <Button
+          style={{
+            marginTop: "2%",
+            width: "80%",
+          }}
+          colorScheme="blue"
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
+        <p>
+          I don't have an account
+          <span
+            style={{
+              textDecoration: "underline",
+              color: "blue",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate("/")}
+          >
+            register
+          </span>
+        </p>
+      </div>
     </form>
   );
 };

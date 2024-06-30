@@ -1,16 +1,20 @@
 import "./App.css";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
-
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Register />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+]);
 function App() {
-  return (
-    <>
-      <h1>Personal Finance Manager</h1>
-      <h3>Sign up</h3>
-      {/* <Register /> */}
-      <Login />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

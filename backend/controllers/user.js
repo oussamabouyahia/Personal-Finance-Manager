@@ -15,8 +15,8 @@ const signUp = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne(email);
-    if (existingUser.email)
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser)
       return res.status(401).json({
         message: `a user with the email ${existingUser.email} is already registred , go to sign in`,
       });
@@ -51,7 +51,10 @@ const signIn = async (req, res) => {
           }
         );
         res.status(200).json({ message: "login successfully", accessToken });
-      } else res.status(401).send("unauthorized access : wrong password");
+      } else
+        res
+          .status(401)
+          .json({ message: "unauthorized access : wrong password" });
     } else res.status(404).json({ message: "no user found with this email" });
   } catch (error) {}
 };

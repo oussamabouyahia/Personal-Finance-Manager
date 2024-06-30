@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import {
   FormControl,
   FormLabel,
@@ -8,6 +9,7 @@ import {
   FormHelperText,
   FormErrorMessage,
 } from "@chakra-ui/react";
+
 import User from "../type";
 type RegistUser = Pick<User, "email" | "password" | "name">;
 const Register = () => {
@@ -16,7 +18,7 @@ const Register = () => {
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
@@ -88,16 +90,31 @@ const Register = () => {
           <FormErrorMessage></FormErrorMessage>
         )}
       </FormControl>
-      <Button
-        style={{
-          marginTop: "2%",
-          width: "80%",
-        }}
-        colorScheme="blue"
-        onClick={handleSubmit}
-      >
-        Sign up
-      </Button>
+      <div style={{ display: "flex", gap: "20%", margin: "1% 10% auto 10%" }}>
+        {" "}
+        <Button
+          style={{
+            width: "30%",
+          }}
+          colorScheme="blue"
+          onClick={handleSubmit}
+        >
+          Sign up
+        </Button>
+        <p>
+          already have an account
+          <span
+            style={{
+              textDecoration: "underline",
+              color: "blue",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate("/login")}
+          >
+            sign in
+          </span>
+        </p>
+      </div>
     </form>
   );
 };
